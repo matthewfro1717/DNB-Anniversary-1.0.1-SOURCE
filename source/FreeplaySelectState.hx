@@ -23,9 +23,9 @@ class FreeplaySelectState extends MusicBeatState
     //var categoryIconsGroup:FlxTypedGroup<FlxSprite>; THIS SHIT IS  SO COMPLICATED FOR NO REASON AUGHHHHHHHHHHHHHHHHHHH
 
     var songColors:Array<FlxColor> = [ //unused as of rn
-		0xFF4965FF, // davee
-		0xFF35C2FF, // bf
-		0xFF2CD12C, // bamber
+	0xFF4965FF, // davee
+        0xFF35C2FF, // bf
+	0xFF2CD12C, // bamber
         0xFFF12B2B, // expunded
         0xFF9F9F9F, // morrowowow
         0xFFC300FF, // gambii
