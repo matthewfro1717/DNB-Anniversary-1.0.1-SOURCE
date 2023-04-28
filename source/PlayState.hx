@@ -6150,7 +6150,7 @@ class PlayState extends MusicBeatState
 	}
 
 	//dave splitathon expression thing but i made it compatible with other characters :sunglasses:
-	public function splitExpress(character:String, expression:String, x:Float, y:Float):Void
+	function splitExpress(character:String, expression:String, x:Float, y:Float):Void
 	{
 		boyfriend.stunned = true; //hopefully this stun stuff should prevent BF from randomly missing a note
 		//stupid bullshit cuz i dont wanna bother with removing thing erighkjrehjgt
