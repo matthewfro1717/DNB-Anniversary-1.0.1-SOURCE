@@ -82,6 +82,8 @@ using StringTools;
 
 class PlayState extends MusicBeatState
 {
+	public static var mania:Int = 0;
+
 	public static var STRUM_X = 42;
 	public static var STRUM_X_MIDDLESCROLL = -278;
 	public static var cameramovingoffset = 40;
@@ -369,24 +371,132 @@ class PlayState extends MusicBeatState
 	public var spike1:FlxSprite;
 	public var spike2:FlxSprite;
 
-	// interdimensional backgrounds
-	public var interdimensionVoid3D:BGSprite;
-	public var interdimensionVoid2D:BGSprite;
-	public var darkSpace:BGSprite;
-	public var spikeVoid:BGSprite;
-	public var hexagonVoid:BGSprite;
-	public var nimbiVoid:BGSprite;
+	//bg stuff
+	var baldi:BGSprite;
+	var spotLight:FlxSprite;
+	var spotLightPart:Bool;
+	var spotLightScaler:Float = 1.3;
+	var lastSinger:Character;
 
-	// exploitation backgrounds
-	public var creepyRoom:BGSprite;
-	public var chains:BGSprite;
-	public var brokenChains:BGSprite;
-	public var glitchCheating:BGSprite;
-	public var glitchCheating2:BGSprite;
-	public var glitchUnfairness:BGSprite;
+	var crowdPeople:FlxTypedGroup<BGSprite> = new FlxTypedGroup<BGSprite>();
+	
+	var interdimensionBG:BGSprite;
+	var currentInterdimensionBG:String;
+	var nimbiLand:BGSprite;
+	var nimbiSign:BGSprite;
+	var flyingBgChars:FlxTypedGroup<FlyingBGChar> = new FlxTypedGroup<FlyingBGChar>();
+	public static var isGreetingsCutscene:Bool;
+	var originalPosition:FlxPoint = new FlxPoint();
+	var daveFlying:Bool;
+	var pressingKey5Global:Bool = false;
 
-	// shared
-	public var sky:BGSprite;
+	var highway:FlxSprite;
+	var bambiSpot:FlxSprite;
+	var bfSpot:FlxSprite;
+	var originalBFScale:FlxPoint;
+	var originBambiPos:FlxPoint;
+	var originBFPos:FlxPoint;
+
+	var tristan:BGSprite;
+	var curTristanAnim:String;
+
+	var desertBG:BGSprite;
+	var desertBG2:BGSprite;
+	var sign:BGSprite;
+        var georgia:BGSprite;
+	var train:BGSprite;
+	var trainSpeed:Float;
+
+	var vcr:VCRDistortionShader;
+
+	var place:BGSprite;
+	var stageCheck:String = 'stage';
+
+	// FUCKING UHH particles
+	var emitter:FlxEmitter;
+	var smashPhone:Array<Int> = new Array<Int>();
+
+	//recursed
+	var darkSky:BGSprite;
+	var darkSky2:BGSprite;
+	var darkSkyStartPos:Float = 1280;
+	var resetPos:Float = -2560;
+	var freeplayBG:BGSprite;
+	var daveBG:String;
+	var bambiBG:String;
+	var tristanBG:String;
+	var charBackdrop:FlxBackdrop;
+	var alphaCharacters:FlxTypedGroup<Alphabet> = new FlxTypedGroup<Alphabet>();
+	var daveSongs:Array<String> = ['House', 'Insanity', 'Polygonized', 'Bonus Song'];
+	var bambiSongs:Array<String> = ['Blocked', 'Corn-Theft', 'Maze', 'Mealie'];
+	var tristanSongs:Array<String> = ['Adventure', 'Vs-Tristan'];
+	var tristanInBotTrot:BGSprite; 
+
+	var missedRecursedLetterCount:Int = 0;
+	var recursedCovers:FlxTypedGroup<FlxSprite> = new FlxTypedGroup<FlxSprite>();
+	var isRecursed:Bool = false;
+	var recursedUI:FlxTypedGroup<FlxObject> = new FlxTypedGroup<FlxObject>();
+
+	var timeLeft:Float;
+	var timeGiven:Float;
+	var timeLeftText:FlxText;
+
+	var noteCount:Int;
+	var notesLeft:Int;
+	var notesLeftText:FlxText;
+
+	var preRecursedHealth:Float;
+	var preRecursedSkin:String;
+	var rotateCamToRight:Bool;
+	var camRotateAngle:Float = 0;
+
+	var rotatingCamTween:FlxTween;
+
+	static var DOWNSCROLL_Y:Float;
+	static var UPSCROLL_Y:Float;
+
+	var switchSide:Bool;
+
+	public var subtitleManager:SubtitleManager;
+	
+	public var guitarSection:Bool;
+	public var dadStrumAmount = 4;
+	public var playerStrumAmount = 4;
+	
+	//explpit
+	var expungedBG:BGSprite;
+	public static var scrollType:String;
+	var preDadPos:FlxPoint = new FlxPoint();
+
+	//window stuff
+	public static var window:Window;
+	var expungedScroll = new Sprite();
+	var expungedSpr = new Sprite();
+	var windowProperties:Array<Dynamic> = new Array<Dynamic>();
+	var expungedWindowMode:Bool = false;
+	var expungedOffset:FlxPoint = new FlxPoint();
+	var expungedMoving:Bool = true;
+	var lastFrame:FlxFrame;
+
+	//indignancy
+	var vignette:FlxSprite;
+	
+	//five night
+	var time:FlxText;
+	var times:Array<Int> = [12, 1, 2, 3, 4, 5];
+	var night:FlxText;
+	var powerLeft:Float = 100;
+	var powerRanOut:Bool;
+	var powerDrainer:Float = 1;
+	var powerMeter:FlxSprite;
+	var powerLeftText:FlxText;
+	var powerDown:FlxSound;
+	var usage:FlxText;
+
+	var door:BGSprite;
+	var doorButton:BGSprite;
+	var doorClosed:Bool;
+	var doorChanging:Bool;
 
 	/// window shit
 	var windowDad:Window;
@@ -432,6 +542,32 @@ class PlayState extends MusicBeatState
 		{
 			keysPressed.push(false);
 		}
+
+		mania = SONG.mania;
+
+		if (mania == 1) {
+			notestuffs = ['LEFT', 'DOWN', 'UP', 'UP', 'RIGHT'];
+			curmultDefine = [curmult[0], curmult[1], curmult[2], curmult[2], curmult[3]];
+		}
+		if (mania == 2) {
+			notestuffs = ['LEFT', 'UP', 'RIGHT', 'LEFT', 'DOWN', 'RIGHT'];
+			curmultDefine = [curmult[0], curmult[2], curmult[3], curmult[0], curmult[1], curmult[3]];
+		}
+		if (mania == 3) {
+			notestuffs = ['LEFT', 'UP', 'RIGHT', 'UP', 'LEFT', 'DOWN', 'RIGHT'];
+			curmultDefine = [curmult[0], curmult[2], curmult[3], curmult[2], curmult[0], curmult[1], curmult[3]];
+		}
+		if (mania == 4) {
+			notestuffs = ['LEFT', 'DOWN', 'UP', 'RIGHT', 'UP', 'LEFT', 'DOWN', 'UP', 'RIGHT'];
+			curmultDefine = [curmult[0], curmult[1], curmult[2], curmult[3], curmult[2], curmult[0], curmult[1], curmult[2], curmult[3]];
+		}
+		if (mania == 5) {
+			notestuffs = ['LEFT', 'DOWN', 'UP', 'RIGHT', 'LEFT', 'DOWN', 'UP', 'RIGHT', 'LEFT', 'DOWN', 'UP', 'RIGHT'];
+			curmultDefine = [curmult[0], curmult[1], curmult[2], curmult[3], curmult[0], curmult[1], curmult[2], curmult[3], curmult[0], curmult[1], curmult[2], curmult[3]];
+		}
+
+		dadStrumAmount = Main.keyAmmo[mania];
+		playerStrumAmount = Main.keyAmmo[mania];
 
 		eyesoreson = ClientPrefs.flashing;
 
@@ -546,7 +682,10 @@ class PlayState extends MusicBeatState
 		SONG.stage = curStage;
 
 		//screenshader.shader.uTime.value[0] = new flixel.math.FlxRandom().float(-100000, 100000);
-
+		
+		var sprites:FlxTypedGroup<BGSprite> = new FlxTypedGroup<BGSprite>();
+		var bgZoom:Float = 0.7;
+		var stageName:String = '';
 		var stageData:StageFile = StageData.getStageFile(curStage);
 		if(stageData == null) { //Stage couldn't be found, create a dummy stage for preventing a crash
 			stageData = {
@@ -2916,7 +3055,13 @@ class PlayState extends MusicBeatState
 		notes = new FlxTypedGroup<Note>();
 		add(notes);
 
+		var sectionCount = noteData.indexOf(section);
+
+		var isGuitarSection = (sectionCount >= 64 && sectionCount < 80) && SONG.song.toLowerCase() == 'shredder'; //wtf
+
 		var noteData:Array<SwagSection>;
+		
+		var daNoteData:Int = Std.int(songNotes[1] % (isGuitarSection ? 5 : Main.keyAmmo[mania]));
 
 		// NEW SHIT
 		noteData = songData.notes;
@@ -2959,6 +3104,10 @@ class PlayState extends MusicBeatState
 				var daNoteData:Int = Std.int(songNotes[1] % 4);
 
 				var gottaHitNote:Bool = section.mustHitSection;
+				if (songNotes[1] > (isGuitarSection ? 4 : Main.keyAmmo[mania] - 1))
+				{
+					gottaHitNote = !section.mustHitSection;
+				}
 
 				if (songNotes[1] > 3)
 				{
@@ -3109,7 +3258,17 @@ class PlayState extends MusicBeatState
 	public var skipArrowStartTween:Bool = false; //for lua
 	private function generateStaticArrows(player:Int):Void
 	{
-		for (i in 0...4)
+		var note_order:Array<Int> = [0,1,2,3];
+		if (mania == 1) note_order = [0, 1, 2, 3, 4];
+		if (mania == 2) note_order = [0, 1, 2, 3, 4, 5];
+		if (mania == 3) note_order = [0, 1, 2, 3, 4, 5, 6];
+		if (mania == 4) note_order = [0, 1, 2, 3, 4, 5, 6, 7, 8];
+		if (mania == 5) note_order = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+		if (localFunny == CharacterFunnyEffect.Bambi)
+		{
+			note_order = [2,2,2,2];
+		}
+		for (i in 0...Main.keyAmmo[mania])
 		{
 			// FlxG.log.add(i);
 			var targetAlpha:Float = 1;
@@ -3129,12 +3288,18 @@ class PlayState extends MusicBeatState
 				}
 				
 				FlxTween.tween(babyArrow, {y: babyArrow.y + 10, alpha: targetAlpha}, 1, {ease: FlxEase.circOut, startDelay: 0.5 + (0.2 * i)});
-			}
+			}			
+			babyArrow.x += Note.swagWidth * Math.abs(i);
+			babyArrow.x += 78 + 78 / 4; // playerStrumAmount
+			babyArrow.x += ((FlxG.width / 2) * player);
+			babyArrow.x -= Note.posRest[mania];
+			babyArrow.playAnim('static');
 			else
 			{
 				babyArrow.alpha = targetAlpha;
 			}
 
+			
 			if (player == 1)
 			{
 				playerStrums.add(babyArrow);
@@ -3331,6 +3496,10 @@ class PlayState extends MusicBeatState
 
 		if (SONG.song.toLowerCase() == 'cheating') // look what you got yourself into
 			{
+				var num:Float = 1.5;
+				if (mania == 2) num = 1.4;
+				if (mania == 3) num = 1.35;
+				if (mania == 4) num = 1.3;
 				playerStrums.forEach(function(spr:FlxSprite)
 				{
 					spr.x += Math.sin(elapsedtime) * ((spr.ID % 2) == 0 ? 1 : -1);
@@ -3346,7 +3515,11 @@ class PlayState extends MusicBeatState
 		if (SONG.song.toLowerCase() == 'unfairness') // dumbass
 			{
 				ClientPrefs.ghostTapping = false;
-				
+
+				var num:Float = 1;
+				if (mania == 2) num = 1.5;
+				if (mania == 3) num = 1.75;
+				if (mania == 4) num = 2.25;
 				playerStrums.forEach(function(spr:FlxSprite)
 				{
 					spr.x = ((FlxG.width / 2) - (spr.width / 2)) + (Math.sin(elapsedtime + (spr.ID)) * 300);
@@ -3818,6 +3991,9 @@ class PlayState extends MusicBeatState
 
 				var strumX:Float = strumGroup.members[daNote.noteData].x;
 				var strumY:Float = strumGroup.members[daNote.noteData].y;
+				if (!guitarSection) strumY = playerStrums.members[daNote.noteData].y;
+				if(!daNote.mustPress) strumY = dadStrums.members[daNote.noteData].y;
+				var swagWidth = 160 * Note.scales[mania];
 				var strumAngle:Float = strumGroup.members[daNote.noteData].angle;
 				var strumDirection:Float = strumGroup.members[daNote.noteData].direction;
 				var strumAlpha:Float = strumGroup.members[daNote.noteData].alpha;
@@ -4496,6 +4672,25 @@ class PlayState extends MusicBeatState
 		updatevels = true;
 	}
 
+	function yFromNoteStrumTime(note:Note, strumLine:FlxSprite, downScroll:Bool):Float
+	{
+		var change = downScroll ? -1 : 1;
+		var speed:Float = SONG.speed;
+		if (localFunny == CharacterFunnyEffect.Tristan)
+		{
+			speed += (Math.sin(elapsedtime / 5)) * 1;
+		}
+		var val:Float = strumLine.y - (Conductor.songPosition - note.strumTime) * (change * 0.45 * FlxMath.roundDecimal(speed * note.LocalScrollSpeed, 2));
+		if (note.isSustainNote && downScroll && note.animation != null)
+		{
+			if (note.animation.curAnim.name.endsWith('end'))
+			{
+				val += (note.height * 1.55 * (0.7 / Note.scales[mania]));
+			}
+			val -= (note.height * 0.2);
+		}
+		return val;
+	}
 
 	public var transitioning = false;
 	public function endSong():Void
@@ -5028,11 +5223,163 @@ class PlayState extends MusicBeatState
 	private function keyShit():Void
 	{
 		// HOLDING
-		var up = controls.NOTE_UP;
-		var right = controls.NOTE_RIGHT;
-		var down = controls.NOTE_DOWN;
-		var left = controls.NOTE_LEFT;
+		// HOLDING
+		var up = controls.UP;
+		var right = controls.RIGHT;
+		var down = controls.DOWN;
+		var left = controls.LEFT;
+		var center = controls.CENTER;
+
+		var upP = controls.UP_P;
+		var rightP = controls.RIGHT_P;
+		var downP = controls.DOWN_P;
+		var leftP = controls.LEFT_P;
+		var centerP = controls.CENTER_P;
+
+		var upR = controls.UP_R;
+		var rightR = controls.RIGHT_R;
+		var downR = controls.DOWN_R;
+		var leftR = controls.LEFT_R;
+		var centerR = controls.CENTER_R;
+
+		var l1 = controls.L1;
+		var u = controls.U1;
+		var r1 = controls.R1;
+		var l2 = controls.L2;
+		var d = controls.D1;
+		var r2 = controls.R2;
+
+		var l1P = controls.L1_P;
+		var uP = controls.U1_P;
+		var r1P = controls.R1_P;
+		var l2P = controls.L2_P;
+		var dP = controls.D1_P;
+		var r2P = controls.R2_P;
+
+		var l1R = controls.L1_R;
+		var uR = controls.U1_R;
+		var r1R = controls.R1_R;
+		var l2R = controls.L2_R;
+		var dR = controls.D1_R;
+		var r2R = controls.R2_R;
+
+		var a0 = controls.A0;
+		var a1 = controls.A1;
+		var a2 = controls.A2;
+		var a3 = controls.A3;
+		var a4 = controls.A4;
+		var a5 = controls.A5;
+		var a6 = controls.A6;
+
+		var a0P = controls.A0_P;
+		var a1P = controls.A1_P;
+		var a2P = controls.A2_P;
+		var a3P = controls.A3_P;
+		var a4P = controls.A4_P;
+		var a5P = controls.A5_P;
+		var a6P = controls.A6_P;
+
+		var a0R = controls.A0_R;
+		var a1R = controls.A1_R;
+		var a2R = controls.A2_R;
+		var a3R = controls.A3_R;
+		var a4R = controls.A4_R;
+		var a5R = controls.A5_R;
+		var a6R = controls.A6_R;
+
+		var n0 = controls.N0;
+		var n1 = controls.N1;
+		var n2 = controls.N2;
+		var n3 = controls.N3;
+		var n4 = controls.N4;
+		var n5 = controls.N5;
+		var n6 = controls.N6;
+		var n7 = controls.N7;
+		var n8 = controls.N8;
+
+		var n0P = controls.N0_P;
+		var n1P = controls.N1_P;
+		var n2P = controls.N2_P;
+		var n3P = controls.N3_P;
+		var n4P = controls.N4_P;
+		var n5P = controls.N5_P;
+		var n6P = controls.N6_P;
+		var n7P = controls.N7_P;
+		var n8P = controls.N8_P;
+
+		var n0R = controls.N0_R;
+		var n1R = controls.N1_R;
+		var n2R = controls.N2_R;
+		var n3R = controls.N3_R;
+		var n4R = controls.N4_R;
+		var n5R = controls.N5_R;
+		var n6R = controls.N6_R;
+		var n7R = controls.N7_R;
+		var n8R = controls.N8_R;
+
+		var t0 = controls.T0;
+		var t1 = controls.T1;
+		var t2 = controls.T2;
+		var t3 = controls.T3;
+		var t4 = controls.T4;
+		var t5 = controls.T5;
+		var t6 = controls.T6;
+		var t7 = controls.T7;
+		var t8 = controls.T8;
+		var t9 = controls.T9;
+		var t10 = controls.T10;
+		var t11 = controls.T11;
+
+		var t0P = controls.T0_P;
+		var t1P = controls.T1_P;
+		var t2P = controls.T2_P;
+		var t3P = controls.T3_P;
+		var t4P = controls.T4_P;
+		var t5P = controls.T5_P;
+		var t6P = controls.T6_P;
+		var t7P = controls.T7_P;
+		var t8P = controls.T8_P;
+		var t9P = controls.T9_P;
+		var t10P = controls.T10_P;
+		var t11P = controls.T11_P;
+
+		var t0R = controls.T0_R;
+		var t1R = controls.T1_R;
+		var t2R = controls.T2_R;
+		var t3R = controls.T3_R;
+		var t4R = controls.T4_R;
+		var t5R = controls.T5_R;
+		var t6R = controls.T6_R;
+		var t7R = controls.T7_R;
+		var t8R = controls.T8_R;
+		var t9R = controls.T9_R;
+		var t10R = controls.T10_R;
+		var t11R = controls.T11_R;
+
 		var controlHoldArray:Array<Bool> = [left, down, up, right];
+		var controlArray:Array<Bool> = [leftP, downP, upP, rightP];
+		var releaseArray:Array<Bool> = [leftR, downR, upR, rightR];
+		if (mania == 1) {
+			controlArray = [leftP, downP, centerP, upP, rightP];
+			releaseArray = [leftR, downR, centerR, upR, rightR];
+		}
+		if (mania == 2) {
+			controlArray = [l1P, uP, r1P, l2P, dP, r2P];
+			releaseArray = [l1R, uR, r1R, l2R, dR, r2R];
+		}
+		if (mania == 3) {
+			controlArray = [a0P, a1P, a2P, a3P, a4P, a5P, a6P];
+			releaseArray = [a0R, a1R, a2R, a3R, a4R, a5R, a6R];
+		}
+		if (mania == 4) {
+			controlArray = [n0P, n1P, n2P, n3P, n4P, n5P, n6P, n7P, n8P];
+			releaseArray = [n0R, n1R, n2R, n3R, n4R, n5R, n6R, n7R, n8R];
+		}
+		if (mania == 5) {
+			controlArray = [t0P, t1P, t2P, t3P, t4P, t5P, t6P, t7P, t8P, t9P, t10P, t11P];
+			releaseArray = [t0R, t1R, t2R, t3R, t4R, t5R, t6R, t7R, t8R, t9R, t10R, t11R];
+		}
+
 		
 		// TO DO: Find a better way to handle controller inputs, this should work for now
 		if(ClientPrefs.controllerMode)
@@ -5048,7 +5395,14 @@ class PlayState extends MusicBeatState
 			}
 		}
 
+		var ankey = (upP || rightP || downP || leftP);
+		if (mania == 1) ankey = (upP || rightP || centerP || downP || leftP);
+		else if (mania == 2) ankey = (l1P || uP || r1P || l2P || dP || r2P);
+		else if (mania == 3) ankey = (a0P || a1P || a2P || a3P || a4P || a5P || a6P);
+		else if (mania == 4) ankey = (n0P || n1P || n2P || n3P || n4P || n5P || n6P || n7P || n8P);
+		else if (mania == 5) ankey = (t0P || t1P || t2P || t3P || t4P || t5P || t6P || t7P || t8P || t9P || t10P || t11P);
 		// FlxG.watch.addQuick('asdfa', upP);
+
 		if (startedCountdown && !boyfriend.stunned && generatedMusic)
 		{
 			// rewritten inputs???
@@ -5084,11 +5438,244 @@ class PlayState extends MusicBeatState
 			{
 				for (i in 0...controlArray.length)
 				{
-					if(controlArray[i])
-						onKeyRelease(new KeyboardEvent(KeyboardEvent.KEY_UP, true, true, -1, keysArray[i][0]));
+					if (controlArray[note.noteData % Main.keyAmmo[mania]])
+					{ //further tweaks to the conductor safe zone offset multiplier needed.
+						if (lasthitnotetime > Conductor.songPosition - Conductor.safeZoneOffset
+							&& lasthitnotetime < Conductor.songPosition + (Conductor.safeZoneOffset * 0.08)) //reduce the past allowed barrier just so notes close together that aren't jacks dont cause missed inputs
+						{
+							if ((note.noteData % Main.keyAmmo[mania]) == (lasthitnote % Main.keyAmmo[mania]))
+							{
+								lasthitnotetime = -999999; //reset the last hit note time
+								continue; //the jacks are too close together
+							}
+						}
+					}
 				}
 			}
 		}
+
+		var condition = up || right || down || left;
+		if (mania == 1) condition = up || right || center || down || left;
+		else if (mania == 2) condition = l1 || u || r1 || l2 || d || r2;
+		else if (mania == 3) condition = a0 || a1 || a2 || a3 || a4 || a5 || a6;
+		else if (mania == 4) condition = n0 || n1 || n2 || n3 || n4 || n5 || n6 || n7 || n8;
+		else if (mania == 5) condition = t0 || t1 || t2 || t3 || t4 || t5 || t6 || t7 || t8 || t9 || t10 || t11;
+		if (condition && generatedMusic)
+		{
+			notes.forEachAlive(function(daNote:Note)
+			{
+				if (daNote.canBeHit && daNote.mustPress && daNote.isSustainNote)
+				{
+					if ((daNote.noteStyle == 'shape' && key5) || (daNote.noteStyle != 'shape' && !key5))
+					{
+						if (mania == 0)
+						{
+							switch (daNote.noteData)
+							{
+								// NOTES YOU ARE HOLDING
+								case 2:
+									if (up || upHold)
+										goodNoteHit(daNote);
+								case 3:
+									if (right || rightHold)
+										goodNoteHit(daNote);
+								case 1:
+									if (down || downHold)
+										goodNoteHit(daNote);
+								case 0:
+									if (left || leftHold)
+										goodNoteHit(daNote);
+							}
+						}
+						else if (mania == 1)
+						{
+							switch (daNote.noteData)
+							{
+								// NOTES YOU ARE HOLDING
+								case 0: if (left || leftHold) goodNoteHit(daNote);
+								case 1: if (down || downHold) goodNoteHit(daNote);
+								case 2: if (center || centerHold) goodNoteHit(daNote);
+								case 3: if (up || upHold) goodNoteHit(daNote);
+								case 4: if (right || rightHold) goodNoteHit(daNote);
+							}
+						}
+						else if (mania == 2)
+						{
+							switch (daNote.noteData)
+							{
+								// NOTES YOU ARE HOLDING
+								case 0:
+									if (l1 || l1Hold)
+										goodNoteHit(daNote);
+								case 1:
+									if (u || uHold)
+										goodNoteHit(daNote);
+								case 2:
+									if (r1 || r1Hold)
+										goodNoteHit(daNote);
+								case 3:
+									if (l2 || l2Hold)
+										goodNoteHit(daNote);
+								case 4:
+									if (d || dHold)
+										goodNoteHit(daNote);
+								case 5:
+									if (r2 || r2Hold)
+										goodNoteHit(daNote);
+							}
+						}
+						else if (mania == 3)
+						{
+							switch (daNote.noteData)
+							{
+								// NOTES YOU ARE HOLDING
+								case 0: if (a0 || a0Hold) goodNoteHit(daNote);
+								case 1: if (a1 || a1Hold) goodNoteHit(daNote);
+								case 2: if (a2 || a2Hold) goodNoteHit(daNote);
+								case 3: if (a3 || a3Hold) goodNoteHit(daNote);
+								case 4: if (a4 || a4Hold) goodNoteHit(daNote);
+								case 5: if (a5 || a5Hold) goodNoteHit(daNote);
+								case 6: if (a6 || a6Hold) goodNoteHit(daNote);
+							}
+						}
+						else if (mania == 4)
+						{
+							switch (daNote.noteData)
+							{
+								// NOTES YOU ARE HOLDING
+								case 0: if (n0 || n0Hold) goodNoteHit(daNote);
+								case 1: if (n1 || n1Hold) goodNoteHit(daNote);
+								case 2: if (n2 || n2Hold) goodNoteHit(daNote);
+								case 3: if (n3 || n3Hold) goodNoteHit(daNote);
+								case 4: if (n4 || n4Hold) goodNoteHit(daNote);
+								case 5: if (n5 || n5Hold) goodNoteHit(daNote);
+								case 6: if (n6 || n6Hold) goodNoteHit(daNote);
+								case 7: if (n7 || n7Hold) goodNoteHit(daNote);
+								case 8: if (n8 || n8Hold) goodNoteHit(daNote);
+							}
+						}
+						else if (mania == 5)
+						{
+							switch (daNote.noteData)
+							{
+								// NOTES YOU ARE HOLDING
+								case 0: if (t0 || t0Hold) goodNoteHit(daNote);
+								case 1: if (t1 || t1Hold) goodNoteHit(daNote);
+								case 2: if (t2 || t2Hold) goodNoteHit(daNote);
+								case 3: if (t3 || t3Hold) goodNoteHit(daNote);
+								case 4: if (t4 || t4Hold) goodNoteHit(daNote);
+								case 5: if (t5 || t5Hold) goodNoteHit(daNote);
+								case 6: if (t6 || t6Hold) goodNoteHit(daNote);
+								case 7: if (t7 || t7Hold) goodNoteHit(daNote);
+								case 8: if (t8 || t8Hold) goodNoteHit(daNote);
+								case 9: if (t9 || t9Hold) goodNoteHit(daNote);
+								case 10: if (t10 || t10Hold) goodNoteHit(daNote);
+								case 11: if (t11 || t11Hold) goodNoteHit(daNote);
+							}
+						}
+					}
+				}
+			});
+		}
+
+		if (boyfriend.holdTimer > Conductor.stepCrochet * 4 * 0.001 && !condition)
+		{
+			if ((boyfriend.animation.curAnim.name.startsWith('sing')) && !boyfriend.animation.curAnim.name.endsWith('miss'))
+			{
+				boyfriend.dance();
+				
+				bfNoteCamOffset[0] = 0;
+				bfNoteCamOffset[1] = 0;
+			}
+		}
+
+		playerStrums.forEach(function(spr:StrumNote)
+		{
+			if (controlArray[spr.ID] && spr.animation.curAnim.name != 'confirm')
+			{
+				spr.playAnim('pressed');
+			}
+			if (releaseArray[spr.ID])
+			{
+				spr.playAnim('static');
+			}
+		});
+	}
+	}
+
+	function badNoteCheck(note:Note = null)
+	{
+		// just double pasting this shit cuz fuk u
+		// REDO THIS SYSTEM!
+		if (note != null)
+		{
+			if(note.mustPress && note.finishedGenerating)
+			{
+				if (!noMiss)
+					noteMiss(note.noteData, note);
+			}
+			return;
+		}
+		var upP = controls.UP_P;
+		var rightP = controls.RIGHT_P;
+		var downP = controls.DOWN_P;
+		var leftP = controls.LEFT_P;
+		var centerP = controls.CENTER_P;
+
+		var l1P = controls.L1_P;
+		var uP = controls.U1_P;
+		var r1P = controls.R1_P;
+		var l2P = controls.L2_P;
+		var dP = controls.D1_P;
+		var r2P = controls.R2_P;
+
+		var a0P = controls.A0_P;
+		var a1P = controls.A1_P;
+		var a2P = controls.A2_P;
+		var a3P = controls.A3_P;
+		var a4P = controls.A4_P;
+		var a5P = controls.A5_P;
+		var a6P = controls.A6_P;
+
+		var n0P = controls.N0_P;
+		var n1P = controls.N1_P;
+		var n2P = controls.N2_P;
+		var n3P = controls.N3_P;
+		var n4P = controls.N4_P;
+		var n5P = controls.N5_P;
+		var n6P = controls.N6_P;
+		var n7P = controls.N7_P;
+		var n8P = controls.N8_P;
+
+		var t0P = controls.T0_P;
+		var t1P = controls.T1_P;
+		var t2P = controls.T2_P;
+		var t3P = controls.T3_P;
+		var t4P = controls.T4_P;
+		var t5P = controls.T5_P;
+		var t6P = controls.T6_P;
+		var t7P = controls.T7_P;
+		var t8P = controls.T8_P;
+		var t9P = controls.T9_P;
+		var t10P = controls.T10_P;
+		var t11P = controls.T11_P;
+
+		var controlArray:Array<Bool> = [leftP, downP, upP, rightP];
+		if (mania == 1) controlArray = [leftP, downP, centerP, upP, rightP];
+		if (mania == 2) controlArray = [l1P, uP, r1P, l2P, dP, r2P];
+		if (mania == 3) controlArray = [a0P, a1P, a2P, a3P, a4P, a5P, a6P];
+		if (mania == 4) controlArray = [n0P, n1P, n2P, n3P, n4P, n5P, n6P, n7P, n8P];
+		if (mania == 5) controlArray = [t0P, t1P, t2P, t3P, t4P, t5P, t6P, t7P, t8P, t9P, t10P, t11P];
+
+		for (i in 0...controlArray.length)
+		{
+			if (controlArray[i])
+			{
+				if (!noMiss)
+					noteMiss(i, note);
+			}	
+		}
+		updateAccuracy();
 	}
 
 	function noteMiss(daNote:Note):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
