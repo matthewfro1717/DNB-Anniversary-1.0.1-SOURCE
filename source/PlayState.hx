@@ -3294,12 +3294,7 @@ class PlayState extends MusicBeatState
 			babyArrow.x += ((FlxG.width / 2) * player);
 			babyArrow.x -= Note.posRest[mania];
 			babyArrow.playAnim('static');
-			else
-			{
-				babyArrow.alpha = targetAlpha;
-			}
 
-			
 			if (player == 1)
 			{
 				playerStrums.add(babyArrow);
