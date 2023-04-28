@@ -1,14 +1,14 @@
 {
-	"storyName": "Bambi's Corn Festival!",
-	"difficulties": "",
-	"weekBackground": "festival",
+	"storyName": "Bambi's corn festival!",
+	"difficulties": "Extrakeys, Normal",
 	"hideFreeplay": false,
+	"weekBackground": "festival",
 	"freeplayColor": [
 		146,
 		113,
 		253
 	],
-	"weekBefore": "",
+	"weekBefore": "tutorial",
 	"startUnlocked": true,
 	"weekCharacters": [
 		"",
@@ -18,43 +18,42 @@
 	"songs": [
 		[
 			"Shredder",
-			"face",
+			"bambi",
 			[
-				140,
-				140,
-				140
+				37,
+				191,
+				55
 			]
 		],
 		[
 			"Greetings",
-			"dad",
+			"tristan",
 			[
-				146,
-				113,
-				253
+				255,
+				19,
+				15
 			]
 		],
 		[
 			"Interdimensional",
-			"dad",
+			"dave-festival-3d",
 			[
-				146,
-				113,
-				253
+				35,
+				57,
+				68
 			]
 		],
 		[
-			"Rano",
-			"dad",
+			"rano",
+			"dave-festival",
 			[
-				146,
-				113,
-				253
+				25,
+				130,
+				0
 			]
 		]
 	],
 	"hideStoryMode": false,
-	"weekColor": "0x770077",
-	"hiddenUntilUnlocked": false,
-	"weekName": "Corn Festival"
+	"weekName": "Custom Week",
+	"hiddenUntilUnlocked": false
 }

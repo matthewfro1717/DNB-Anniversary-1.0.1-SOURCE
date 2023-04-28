@@ -1,9 +1,9 @@
 {
-	"storyName": "Dave's Fun Rapping Battle!",
-	"difficulties": "",
-	"weekBackground": "DaveHouse",
+	"storyName": "Dave's fun rapping battle!",
+	"difficulties": "Extrakeys, Normal",
 	"hideFreeplay": false,
-	"weekBefore": "",
+	"weekBackground": "DaveHouse",
+	"weekBefore": "tutorial",
 	"freeplayColor": [
 		146,
 		113,
@@ -14,29 +14,29 @@
 	"songs": [
 		[
 			"House",
-			"face",
+			"dave",
 			[
-				140,
-				140,
-				140
+				15,
+				95,
+				255
 			]
 		],
 		[
 			"Insanity",
-			"dad",
+			"dave-annoyed",
 			[
-				146,
-				113,
-				253
+				15,
+				95,
+				255
 			]
 		],
 		[
 			"Polygonized",
-			"dad",
+			"dave-angey",
 			[
-				146,
-				113,
-				253
+				103,
+				35,
+				32
 			]
 		]
 	],
@@ -45,7 +45,6 @@
 		"",
 		""
 	],
-	"weekName": "Vs Dave",
 	"hiddenUntilUnlocked": false,
-	"weekColor": "0x5561ff"
+	"weekName": "Custom Week"
 }

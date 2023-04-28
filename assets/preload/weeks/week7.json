@@ -1,0 +1,113 @@
+{
+	"storyName": "Extras",
+	"difficulties": "Extrakeys, Normal",
+	"hideFreeplay": false,
+	"weekBackground": "",
+	"freeplayColor": [
+		146,
+		113,
+		253
+	],
+	"weekBefore": "tutorial",
+	"startUnlocked": true,
+	"weekCharacters": [
+		"",
+		"",
+		""
+	],
+	"songs": [
+		[
+			"bonus-song",
+			"dave",
+			[
+				15,
+				95,
+				255
+			]
+		],
+		[
+			"bot-trot",
+			"playrobot",
+			[
+				162,
+				150,
+				188
+			]
+		],
+		[
+			"Escape-From-California",
+			"moldy",
+			[
+				39,
+				21,
+				130
+			]
+		],
+		[
+			"Five-Nights",
+			"dave-fnaf",
+			[
+				15,
+				95,
+				255
+			]
+		],
+		[
+			"Adventure",
+			"tristan",
+			[
+				255,
+				19,
+				15
+			]
+		],
+		[
+			"Overdrive",
+			"dave-awesome",
+			[
+				6,
+				160,
+				255
+			]
+		],
+		[
+			"Mealie",
+			"bambi-loser",
+			[
+				37,
+				191,
+				55
+			]
+		],
+		[
+			"Indignancy",
+			"bambi-angey",
+			[
+				37,
+				191,
+				55
+			]
+		],
+		[
+			"Memory",
+			"dave",
+			[
+				15,
+				95,
+				255
+			]
+		],
+		[
+			"Recursed",
+			"recurser",
+			[
+				44,
+				44,
+				44
+			]
+		]
+	],
+	"hideStoryMode": true,
+	"weekName": "Custom Week",
+	"hiddenUntilUnlocked": false
+}

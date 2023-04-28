@@ -1,14 +1,14 @@
 {
-	"storyName": "The Finale",
-	"difficulties": "",
-	"weekBackground": "splitathon",
+	"storyName": "the finale",
+	"difficulties": "Extrakeys, Normal",
 	"hideFreeplay": false,
+	"weekBackground": "splitathon",
 	"freeplayColor": [
 		146,
 		113,
 		253
 	],
-	"weekBefore": "",
+	"weekBefore": "tutorial",
 	"startUnlocked": true,
 	"weekCharacters": [
 		"",
@@ -18,16 +18,15 @@
 	"songs": [
 		[
 			"Splitathon",
-			"face",
+			"the-duo",
 			[
-				140,
-				140,
-				140
+				0,
+				255,
+				255
 			]
 		]
 	],
 	"hideStoryMode": false,
-	"weekColor": "0x00ffff",
-	"hiddenUntilUnlocked": false,
-	"weekName": "The Finale"
+	"weekName": "Custom Week",
+	"hiddenUntilUnlocked": false
 }

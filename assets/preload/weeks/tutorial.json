@@ -1,33 +1,32 @@
 {
-	"songs": [
-		[
-			"Warmup",
-			"face",
-			[
-				140,
-				140,
-				140
-			]
-		]
-	],
-	"weekColor": "0x9944cc",
-	"hiddenUntilUnlocked": false,
+	"storyName": "daves's funkin class",
+	"difficulties": "Extrakeys, Normal",
 	"hideFreeplay": false,
 	"weekBackground": "warmup",
-	"difficulties": "",
-	"weekCharacters": [
-		"",
-		"",
-		""
-	],
-	"storyName": "Dave's Funkin Class",
-	"weekName": "Dave's Funkin Class",
+	"weekBefore": "tutorial",
 	"freeplayColor": [
 		146,
 		113,
 		253
 	],
+	"startUnlocked": true,
 	"hideStoryMode": false,
-	"weekBefore": "",
-	"startUnlocked": true
+	"songs": [
+		[
+			"Warmup",
+			"dave",
+			[
+				15,
+				95,
+				255
+			]
+		]
+	],
+	"weekCharacters": [
+		"",
+		"",
+		""
+	],
+	"hiddenUntilUnlocked": false,
+	"weekName": "Custom Week"
 }
