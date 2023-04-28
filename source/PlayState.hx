@@ -6215,21 +6215,21 @@ class PlayState extends MusicBeatState
 		super.destroy();
 	}
 
-	public static function cancelMusicFadeTween() {
+	function cancelMusicFadeTween() {
 		if(FlxG.sound.music.fadeTween != null) {
 			FlxG.sound.music.fadeTween.cancel();
 		}
 		FlxG.sound.music.fadeTween = null;
 	}
 
-	public function removeLua(lua:FunkinLua) {
+	function removeLua(lua:FunkinLua) {
 		if(luaArray != null && !preventLuaRemove) {
 			luaArray.remove(lua);
 		}
 	}
 
 	var lastStepHit:Int = -1;
-	override function stepHit()
+	function stepHit()
 	{
 		super.stepHit();
 		if (Math.abs(FlxG.sound.music.time - (Conductor.songPosition - Conductor.offset)) > 20
@@ -6252,7 +6252,7 @@ class PlayState extends MusicBeatState
 
 	var lastBeatHit:Int = -1;
 	
-	override function beatHit()
+	function beatHit()
 	{
 		super.beatHit();
 
@@ -6361,8 +6361,8 @@ class PlayState extends MusicBeatState
 		callOnLuas('onBeatHit', []);
 	}
 
-	public var closeLuas:Array<FunkinLua> = [];
-	public function callOnLuas(event:String, args:Array<Dynamic>):Dynamic {
+	var closeLuas:Array<FunkinLua> = [];
+	function callOnLuas(event:String, args:Array<Dynamic>):Dynamic {
 		var returnVal:Dynamic = FunkinLua.Function_Continue;
 		#if LUA_ALLOWED
 		for (i in 0...luaArray.length) {
@@ -6380,7 +6380,7 @@ class PlayState extends MusicBeatState
 		return returnVal;
 	}
 
-	public function setOnLuas(variable:String, arg:Dynamic) {
+	function setOnLuas(variable:String, arg:Dynamic) {
 		#if LUA_ALLOWED
 		for (i in 0...luaArray.length) {
 			luaArray[i].set(variable, arg);
@@ -6402,10 +6402,10 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	public var ratingName:String = '?';
-	public var ratingPercent:Float;
-	public var ratingFC:String;
-	public function RecalculateRating() {
+	var ratingName:String = '?';
+	var ratingPercent:Float;
+	var ratingFC:String;
+	function RecalculateRating() {
 		setOnLuas('score', songScore);
 		setOnLuas('misses', songMisses);
 		setOnLuas('hits', songHits);
@@ -6462,7 +6462,7 @@ class PlayState extends MusicBeatState
 	}
 
 	#if ACHIEVEMENTS_ALLOWED
-	private function checkForAchievement(achievesToCheck:Array<String> = null):String
+	function checkForAchievement(achievesToCheck:Array<String> = null):String
 	{
 		if(chartingMode) return null;
 
