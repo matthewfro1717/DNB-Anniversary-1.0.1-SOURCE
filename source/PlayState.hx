@@ -164,6 +164,9 @@ class PlayState extends MusicBeatState
 	public var stupidy:Float = 0; // stupid velocities for cutscene
 	public var updatevels:Bool = false;
 
+	var curLight:Int = -1;
+	var curLightEvent:Int = -1;
+
 	var funnyZoomSongs:Array<String> = ['overdrive', 'amber', 'ultimatum', 'polygonized', 'get-real'];
 	var zoomSong:Bool = false; // this shouldnt even have to fucking exist
 
@@ -6461,7 +6464,6 @@ class PlayState extends MusicBeatState
 		setOnLuas('ratingFC', ratingFC);
 	}
 
-	#if ACHIEVEMENTS_ALLOWED
 	function checkForAchievement(achievesToCheck:Array<String> = null):String
 	{
 		if(chartingMode) return null;
@@ -6541,11 +6543,6 @@ class PlayState extends MusicBeatState
 					return achievementName;
 				}
 			}
-		}
-		return null;
+		}	
 	}
-	#end
-
-	var curLight:Int = -1;
-	var curLightEvent:Int = -1;
 }
